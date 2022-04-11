@@ -12,7 +12,19 @@ import java.awt.event.MouseMotionListener;
 import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 
+import graphics.global.Constants;
+import graphics.global.Constants.ETools;
+
+import graphics.shapes.TLine;
+import graphics.shapes.TOval;
+import graphics.shapes.TPolygon;
+import graphics.shapes.TRectangle;
+import graphics.shapes.TShape;
+
 public class DrawingPanel extends JPanel {
+
+    private ETools eTool;
+    private TShape selectedTool;
 
     public DrawingPanel(){
         this.setBackground(Color.white);
@@ -23,130 +35,49 @@ public class DrawingPanel extends JPanel {
 		this.addMouseWheelListener(handler);
     }
 
+    public void setSelectedTool(Constants.ETools eTool){
+        this.eTool = eTool;
+    }
+
     public void paint(Graphics graphics){
         super.paint(graphics);
     }
 
-    Shape shape;
-    int selectedShape;
 
-    private void prepareDrawing(int x, int y){
-        
-        if(this.selectedShape == 1){
-            this.shape = new Rectangle(x, y);
-        } else if(this.selectedShape == 2){
-            this.shape = new Oval(x, y);
-        } else if(this.selectedShape == 3){
-            this.shape = new Polygon(x,y);
-        } else if(this.selectedShape == 4){
-            this.shape = new Line(x, y);
-        }
+    private void prepareDrawing(int x, int y) {
+		if (this.eTool == ETools.ePolygon) {
+			this.selectedTool = new TPolygon(x, y);
 
-        Graphics2D graphics2d = (Graphics2D) this.getGraphics();
+		} else if (this.eTool == ETools.eRectangle) {
+			this.selectedTool = new TRectangle(x, y);
+
+		} else if (this.eTool == ETools.eOval) {
+			this.selectedTool = new TOval(x, y);
+
+		} else if (this.eTool == ETools.eLine) {
+			this.selectedTool = new TLine(x, y);
+		}
+		Graphics2D graphics2d = (Graphics2D) this.getGraphics();
 		graphics2d.setXORMode(this.getBackground());
-        this.shape.draw(graphics2d);
-    }
+		this.selectedTool.draw(graphics2d);
 
-    private void keepDrawing(int x, int y){
-        // erase
-        Graphics2D graphics2d = (Graphics2D) this.getGraphics();
+	}
+
+	private void keepDrawing(int x, int y) {
+		// erase
+		Graphics2D graphics2d = (Graphics2D) this.getGraphics();
 		graphics2d.setXORMode(this.getBackground());
-        this.shape.draw(graphics2d);
-        
-        // draw
-        this.shape.resize(x, y);
-        this.shape.draw(graphics2d);
-    }
+		this.selectedTool.draw(graphics2d);
+
+		// draw
+		this.selectedTool.resize(x, y);
+		this.selectedTool.draw(graphics2d);
+	}
 
     private void finishDrawing(int x, int y){
         
     }
 
-    abstract private class Shape{
-        public Shape(){}
-        abstract public void resize(int x, int y);
-        abstract public void draw(Graphics2D graphics2d);
-    }
-
-    private class Rectangle extends Shape{
-        private int x, y, w, h;
-        private boolean draggedDirectionX, draggedDirectionY;
-
-        public Rectangle(int x, int y){
-            this.x = x;
-            this.y = y;
-            this.w = 0;
-            this.h = 0;
-        }
-
-        public void resize(int currentX, int currentY){
-            this.w = currentX - x > 0 ? currentX - x : x- currentX;
-		    this.h = currentY - y > 0 ? currentY - y : y- currentY;
-		    this.draggedDirectionX = currentX - x > 0 ? true : false;
-		    this.draggedDirectionY = currentY - y > 0 ? true : false;
-        }
-
-        public void draw(Graphics2D graphics2d){
-            graphics2d.drawRect(draggedDirectionX==true ? x: x-w,draggedDirectionY==true ? y: y-h, w,h);
-        }
-    }
-
-    private class Oval extends Shape{
-        private int x, y, w, h;
-        private boolean draggedDirectionX, draggedDirectionY;
-
-        public Oval(int x, int y){
-            this.x = x;
-            this.y = y;
-            this.w = 0;
-            this.h = 0;
-        }
-
-        public void resize(int currentX, int currentY){
-            this.w = currentX - x > 0 ? currentX - x : x- currentX;
-		    this.h = currentY - y > 0 ? currentY - y : y- currentY;
-		    this.draggedDirectionX = currentX - x > 0 ? true : false;
-		    this.draggedDirectionY = currentY - y > 0 ? true : false;
-        }
-
-        public void draw(Graphics2D graphics2d){
-            graphics2d.drawOval(draggedDirectionX==true ? x: x-w,draggedDirectionY==true ? y: y-h, w,h);
-        }
-    }
-
-    private class Polygon extends Shape{
-
-        public Polygon(int x, int y){
-        }
-
-        public void resize(int currentX, int currentY){
-        }
-
-        public void draw(Graphics2D graphics2d){
-        }
-    }
-
-    private class Line extends Shape{
-        private int x, y, currentX, currentY;
-	
-        public Line(int x, int y) {
-            this.x = x;
-            this.y = y;
-            this.currentX = 0;
-            this.currentY = 0;
-        }
-
-        public void resize(int currentX, int currentY) {
-            this.currentX = currentX;
-            this.currentY = currentY;
-        }
-        
-        public void draw(Graphics2D graphics2d) {
-            graphics2d.drawLine(x, y, currentX==0? x : currentX, currentY==0? y : currentY); 
-        }
-    }
-
-    
 
     private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener{
 

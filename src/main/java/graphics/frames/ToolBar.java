@@ -9,6 +9,8 @@ import javax.swing.JToolBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import graphics.global.Constants;
+
 public class ToolBar extends JToolBar {
     
     private JRadioButton rectangleTool;
@@ -63,13 +65,13 @@ public class ToolBar extends JToolBar {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			if(event.getSource() == rectangleTool ) {
-                drawingPanel.selectedShape = 1;		
+                drawingPanel.setSelectedTool(Constants.ETools.eRectangle);		
 			} else if(event.getSource() == ovalTool) {
-                drawingPanel.selectedShape = 2;		
+				drawingPanel.setSelectedTool(Constants.ETools.eOval);	
             } else if(event.getSource() == polygonTool) {
-                drawingPanel.selectedShape = 3;		
+                drawingPanel.setSelectedTool(Constants.ETools.ePolygon);	
 			} else if(event.getSource() == lineTool) {
-                drawingPanel.selectedShape = 4;		
+				drawingPanel.setSelectedTool(Constants.ETools.eLine);	
 			} 
 		}
 		
