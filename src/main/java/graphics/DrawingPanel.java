@@ -1,7 +1,10 @@
 package graphics;
 
 import javax.swing.JPanel;
+
+import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -12,6 +15,7 @@ import java.awt.event.MouseWheelListener;
 public class DrawingPanel extends JPanel {
 
     public DrawingPanel(){
+        this.setBackground(Color.white);
 
         MouseHandler handler = new MouseHandler();
 		this.addMouseListener(handler);
@@ -27,14 +31,20 @@ public class DrawingPanel extends JPanel {
 
     private void prepareDrawing(int x, int y){
         this.rectangle = new Rectangle(x, y);
+        Graphics2D graphics2d = (Graphics2D) this.getGraphics();
+		graphics2d.setXORMode(this.getBackground());
+        this.rectangle.draw(graphics2d);
     }
 
     private void keepDrawing(int x, int y){
         // erase
-        
+        Graphics2D graphics2d = (Graphics2D) this.getGraphics();
+		graphics2d.setXORMode(this.getBackground());
+        this.rectangle.draw(graphics2d);
+
         // draw
         this.rectangle.resize(x, y);
-        this.rectangle.draw(this.getGraphics());
+        this.rectangle.draw(graphics2d);
     }
 
     private void finishDrawing(int x, int y){
@@ -59,8 +69,8 @@ public class DrawingPanel extends JPanel {
 		    this.draggedDirectionY = currentY - y > 0 ? true : false;
         }
 
-        public void draw(Graphics graphics){
-            graphics.drawRect(draggedDirectionX==true ? x: x-w,draggedDirectionY==true ? y: y-h, w,h);
+        public void draw(Graphics2D graphics2d){
+            graphics2d.drawRect(draggedDirectionX==true ? x: x-w,draggedDirectionY==true ? y: y-h, w,h);
         }
     }
 
