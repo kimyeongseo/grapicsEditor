@@ -27,45 +27,48 @@ public class DrawingPanel extends JPanel {
         super.paint(graphics);
     }
 
-    Rectangle rectangle;
-    Oval oval;
-    Line line;
+    Shape shape;
+    int selectedShape;
 
     private void prepareDrawing(int x, int y){
-        this.rectangle = new Rectangle(x, y);
-        this.oval = new Oval(x, y);
-        this.line = new Line(x, y);
+        
+        if(this.selectedShape == 1){
+            this.shape = new Rectangle(x, y);
+        } else if(this.selectedShape == 2){
+            this.shape = new Oval(x, y);
+        } else if(this.selectedShape == 3){
+            this.shape = new Polygon(x,y);
+        } else if(this.selectedShape == 4){
+            this.shape = new Line(x, y);
+        }
 
         Graphics2D graphics2d = (Graphics2D) this.getGraphics();
 		graphics2d.setXORMode(this.getBackground());
-        this.rectangle.draw(graphics2d);
-        this.oval.draw(graphics2d);
-        this.line.draw(graphics2d);
+        this.shape.draw(graphics2d);
     }
 
     private void keepDrawing(int x, int y){
         // erase
         Graphics2D graphics2d = (Graphics2D) this.getGraphics();
 		graphics2d.setXORMode(this.getBackground());
-        this.rectangle.draw(graphics2d);
-        this.oval.draw(graphics2d);
-        this.line.draw(graphics2d);
-
-
+        this.shape.draw(graphics2d);
+        
         // draw
-        this.rectangle.resize(x, y);
-        this.rectangle.draw(graphics2d);
-        this.oval.resize(x, y);
-        this.oval.draw(graphics2d);
-        this.line.resize(x, y);
-        this.line.draw(graphics2d);
+        this.shape.resize(x, y);
+        this.shape.draw(graphics2d);
     }
 
     private void finishDrawing(int x, int y){
         
     }
 
-    private class Rectangle{
+    abstract private class Shape{
+        public Shape(){}
+        abstract public void resize(int x, int y);
+        abstract public void draw(Graphics2D graphics2d);
+    }
+
+    private class Rectangle extends Shape{
         private int x, y, w, h;
         private boolean draggedDirectionX, draggedDirectionY;
 
@@ -88,7 +91,7 @@ public class DrawingPanel extends JPanel {
         }
     }
 
-    private class Oval{
+    private class Oval extends Shape{
         private int x, y, w, h;
         private boolean draggedDirectionX, draggedDirectionY;
 
@@ -111,7 +114,19 @@ public class DrawingPanel extends JPanel {
         }
     }
 
-    private class Line{
+    private class Polygon extends Shape{
+
+        public Polygon(int x, int y){
+        }
+
+        public void resize(int currentX, int currentY){
+        }
+
+        public void draw(Graphics2D graphics2d){
+        }
+    }
+
+    private class Line extends Shape{
         private int x, y, currentX, currentY;
 	
         public Line(int x, int y) {
