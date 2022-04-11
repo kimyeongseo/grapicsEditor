@@ -6,6 +6,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JRadioButton;
 import javax.swing.JToolBar;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 public class ToolBar extends JToolBar {
     
     private JRadioButton rectangleTool;
@@ -39,8 +42,24 @@ public class ToolBar extends JToolBar {
         this.lineIcon = new ImageIcon("Icon/icons8-line-24.png");
 		this.lineTool = new JRadioButton(lineIcon);
 		this.add(this.lineTool);
-		buttonGroup.add(this.lineTool);
-		
+		buttonGroup.add(this.lineTool);	
     }
+
+    private class ActionHandler implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			if(event.getSource() == rectangleTool ) {
+					
+			} else if(event.getSource() == ovalTool) {
+			
+            } else if(event.getSource() == polygonTool) {
+				
+			} else if(event.getSource() == lineTool) {
+				
+			} 
+		}
+		
+	}
 
 }
