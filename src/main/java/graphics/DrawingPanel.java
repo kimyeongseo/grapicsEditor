@@ -23,6 +23,47 @@ public class DrawingPanel extends JPanel {
         super.paint(graphics);
     }
 
+    Rectangle rectangle;
+
+    private void prepareDrawing(int x, int y){
+        this.rectangle = new Rectangle(x, y);
+    }
+
+    private void keepDrawing(int x, int y){
+        // erase
+        
+        // draw
+        this.rectangle.resize(x, y);
+        this.rectangle.draw(this.getGraphics());
+    }
+
+    private void finishDrawing(int x, int y){
+        
+    }
+
+    private class Rectangle{
+        private int x, y, w, h;
+        private boolean draggedDirectionX, draggedDirectionY;
+
+        public Rectangle(int x, int y){
+            this.x = x;
+            this.y = y;
+            this.w = 0;
+            this.h = 0;
+        }
+
+        public void resize(int currentX, int currentY){
+            this.w = currentX - x > 0 ? currentX - x : x- currentX;
+		    this.h = currentY - y > 0 ? currentY - y : y- currentY;
+		    this.draggedDirectionX = currentX - x > 0 ? true : false;
+		    this.draggedDirectionY = currentY - y > 0 ? true : false;
+        }
+
+        public void draw(Graphics graphics){
+            graphics.drawRect(draggedDirectionX==true ? x: x-w,draggedDirectionY==true ? y: y-h, w,h);
+        }
+    }
+
     private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener{
 
         public void mouseClicked(MouseEvent e){
@@ -32,9 +73,11 @@ public class DrawingPanel extends JPanel {
 		}
 		
 		public void mousePressed(MouseEvent e) {
+            prepareDrawing(e.getX(), e.getY());
 		}
 
 		public void mouseReleased(MouseEvent e) {
+            finishDrawing(e.getX(), e.getY());
 		}
 
 		public void mouseEntered(MouseEvent e) {
@@ -44,6 +87,7 @@ public class DrawingPanel extends JPanel {
 		}
 
 		public void mouseDragged(MouseEvent e) {
+            keepDrawing(e.getX(), e.getY());
 		}
 	
 		public void mouseWheelMoved(MouseWheelEvent e) {
