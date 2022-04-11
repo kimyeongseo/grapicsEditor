@@ -23,6 +23,7 @@ public class ToolBar extends JToolBar {
 
     public ToolBar(){
         ButtonGroup buttonGroup = new ButtonGroup();
+        ActionHandler actionHandler = new ActionHandler();
 
         this.rectangleIcon = new ImageIcon("Icon/icons8-rectangle-24.png");
 		this.rectangleTool = new JRadioButton(rectangleIcon);
@@ -43,6 +44,18 @@ public class ToolBar extends JToolBar {
 		this.lineTool = new JRadioButton(lineIcon);
 		this.add(this.lineTool);
 		buttonGroup.add(this.lineTool);	
+
+        this.rectangleTool.addActionListener(actionHandler);
+		this.ovalTool.addActionListener(actionHandler);
+        this.polygonTool.addActionListener(actionHandler);
+		this.lineTool.addActionListener(actionHandler);
+    }
+
+    DrawingPanel drawingPanel = new DrawingPanel();
+
+    public void assosiate(DrawingPanel drawingPanel) {
+        this.drawingPanel = drawingPanel;
+        this.rectangleTool.doClick();
     }
 
     private class ActionHandler implements ActionListener{
@@ -50,13 +63,13 @@ public class ToolBar extends JToolBar {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			if(event.getSource() == rectangleTool ) {
-					
+                drawingPanel.selectedShape = 1;		
 			} else if(event.getSource() == ovalTool) {
-			
+                drawingPanel.selectedShape = 2;		
             } else if(event.getSource() == polygonTool) {
-				
+                drawingPanel.selectedShape = 3;		
 			} else if(event.getSource() == lineTool) {
-				
+                drawingPanel.selectedShape = 4;		
 			} 
 		}
 		
