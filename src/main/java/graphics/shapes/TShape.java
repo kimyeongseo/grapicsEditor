@@ -11,6 +11,6 @@ abstract public class TShape{
 		int thickness = 3;
 		return thickness;
 	}
-	public void addPoint(int x, int y, boolean drawing) {		
+	public void addPoint(int x, int y) {		
 	}; 
 }
