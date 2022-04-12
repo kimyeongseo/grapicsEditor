@@ -12,5 +12,7 @@ abstract public class TShape{
 		return thickness;
 	}
 	public void addPoint(int x, int y) {		
-	}; 
+	}
+    public void getCoord(int x, int y) {
+    }; 
 }

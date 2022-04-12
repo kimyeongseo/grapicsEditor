@@ -14,13 +14,9 @@ import java.awt.event.MouseWheelListener;
 import java.util.Vector;
 
 import graphics.global.Constants;
-import graphics.global.Constants.ETools;
 
-import graphics.shapes.TLine;
-import graphics.shapes.TOval;
-import graphics.shapes.TPolygon;
-import graphics.shapes.TRectangle;
 import graphics.shapes.TShape;
+import javafx.scene.effect.Light.Point;
 
 public class DrawingPanel extends JPanel {
 
@@ -32,6 +28,7 @@ public class DrawingPanel extends JPanel {
 
     // working variable
     private TShape selectedTool;
+
 
     private enum EDrawingState{
         eIdle,
@@ -53,8 +50,8 @@ public class DrawingPanel extends JPanel {
 		this.addMouseWheelListener(handler);
     }
 
-    public void setSelectedTool(Constants.ETools eTool){
-        this.eTool = eTool;
+    public void setSelectedTool(TShape selectedTool){
+        this.selectedTool = selectedTool;
     }
 
     public void paint(Graphics graphics){
@@ -66,21 +63,9 @@ public class DrawingPanel extends JPanel {
 
 
     private void prepareDrawing(int x, int y) {
-		if (this.eTool == ETools.ePolygon) {
-			this.selectedTool = new TPolygon(x, y);
-
-		} else if (this.eTool == ETools.eRectangle) {
-			this.selectedTool = new TRectangle(x, y);
-
-		} else if (this.eTool == ETools.eOval) {
-			this.selectedTool = new TOval(x, y);
-
-		} else if (this.eTool == ETools.eLine) {
-			this.selectedTool = new TLine(x, y);
-		}
-
 		Graphics2D graphics2d = (Graphics2D) this.getGraphics();
 		graphics2d.setXORMode(this.getBackground());
+		this.selectedTool.getCoord(x,y);
 		this.selectedTool.draw(graphics2d);
 	}
 
@@ -105,6 +90,7 @@ public class DrawingPanel extends JPanel {
 	private void finishDrawing(int x, int y) {
 		this.shapes.add(this.selectedTool);
 	}
+	
 
 
     private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener{
@@ -121,7 +107,7 @@ public class DrawingPanel extends JPanel {
 
         private void lButtonClicked(MouseEvent e) {
 			if(eDrawingState == EDrawingState.eIdle) {
-				if(eTool== Constants.ETools.ePolygon) {
+				if(eTool == Constants.ETools.ePolygon) {
 					eDrawingState = EDrawingState.eNPointDrawing;
 					prepareDrawing(e.getX(), e.getY());	
 				}

@@ -7,13 +7,16 @@ public class TOval extends TShape{
 	private boolean draggedDirectionX, draggedDirectionY;
 	private int x,y,w,h;
 
-	
-	public TOval(int x, int y) {
+	public TOval() {
+	}
+
+	public void getCoord(int x, int y){
 		this.x = x;
 		this.y = y;
 		this.w = 0;
 		this.h = 0;
 	}
+	
 	public void resize(int currentX, int currentY) {
 		this.w = currentX - x > 0 ? currentX - x : x- currentX;
 		this.h = currentY - y > 0 ? currentY - y : y- currentY;

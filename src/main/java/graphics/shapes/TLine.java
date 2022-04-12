@@ -7,7 +7,10 @@ import java.awt.Graphics2D;
 public class TLine extends TShape {
 	private int x, y, currentX, currentY;
 	
-	public TLine(int x, int y) {
+	public TLine() {
+	}
+
+	public void getCoord(int x, int y){
 		this.x = x;
 		this.y = y;
 		this.currentX = 0;

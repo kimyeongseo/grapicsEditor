@@ -10,6 +10,11 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 import graphics.global.Constants;
+import graphics.shapes.TLine;
+import graphics.shapes.TOval;
+import graphics.shapes.TPolygon;
+import graphics.shapes.TRectangle;
+import javafx.scene.effect.Light.Point;
 
 public class ToolBar extends JToolBar {
     
@@ -65,13 +70,13 @@ public class ToolBar extends JToolBar {
 		@Override
 		public void actionPerformed(ActionEvent event) {
 			if(event.getSource() == rectangleTool ) {
-                drawingPanel.setSelectedTool(Constants.ETools.eRectangle);		
+                drawingPanel.setSelectedTool(new TRectangle());
 			} else if(event.getSource() == ovalTool) {
-				drawingPanel.setSelectedTool(Constants.ETools.eOval);	
+				drawingPanel.setSelectedTool(new TOval());	
             } else if(event.getSource() == polygonTool) {
-                drawingPanel.setSelectedTool(Constants.ETools.ePolygon);	
+                drawingPanel.setSelectedTool(new TPolygon());	
 			} else if(event.getSource() == lineTool) {
-				drawingPanel.setSelectedTool(Constants.ETools.eLine);	
+				drawingPanel.setSelectedTool(new TLine());	
 			} 
 		}
 		

@@ -7,7 +7,10 @@ public class TRectangle extends TShape{
 	private boolean draggedDirectionX, draggedDirectionY;
 	private int x,y,w,h;
 
-	public TRectangle(int x, int y) {
+	public TRectangle() {
+	}
+
+	public void getCoord(int x, int y){
 		this.x = x;
 		this.y = y;
 		this.w = 0;
