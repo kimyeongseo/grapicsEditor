@@ -10,7 +10,11 @@ public class TLine extends TShape {
 	public TLine() {
 	}
 
-	public void getCoord(int x, int y){
+	public TShape clone() {
+		return new TLine();
+	}
+
+	public void setOrigin(int x, int y) {
 		this.x = x;
 		this.y = y;
 		this.currentX = 0;
@@ -25,8 +29,6 @@ public class TLine extends TShape {
 	
 	public void draw(Graphics2D graphics2d) {
 		((Graphics2D)graphics2d).setStroke(new BasicStroke(thickness()));
-		graphics2d.drawLine(x, y, currentX==0? x : currentX, currentY==0? y : currentY);
-		
+		graphics2d.drawLine(x, y, currentX==0? x : currentX, currentY==0? y : currentY);	
 	}
-
 }

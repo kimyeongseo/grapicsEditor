@@ -1,4 +1,5 @@
 package graphics.frames;
+import java.awt.Color;
 
 import javax.swing.ButtonGroup;
 import javax.swing.Icon;
@@ -9,77 +10,46 @@ import javax.swing.JToolBar;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import graphics.global.Constants;
-import graphics.shapes.TLine;
-import graphics.shapes.TOval;
-import graphics.shapes.TPolygon;
-import graphics.shapes.TRectangle;
-import javafx.scene.effect.Light.Point;
+import graphics.global.Constants.ETools;
 
 public class ToolBar extends JToolBar {
-    
-    private JRadioButton rectangleTool;
-    private JRadioButton ovalTool;
-    private JRadioButton polygonTool;
-    private JRadioButton lineTool;
+	private static final long serialVersionUID = 1L;
 
-    private Icon rectangleIcon;
-	private Icon ovalIcon;
-	private Icon lineIcon;
-	private Icon polygonIcon;
-
-    public ToolBar(){
-        ButtonGroup buttonGroup = new ButtonGroup();
-        ActionHandler actionHandler = new ActionHandler();
-
-        this.rectangleIcon = new ImageIcon("Icon/icons8-rectangle-24.png");
-		this.rectangleTool = new JRadioButton(rectangleIcon);
-		this.add(this.rectangleTool);
-		buttonGroup.add(this.rectangleTool);
+	 private JRadioButton toolButton;
+	 private Icon tooIcon;
+	 
+	 DrawingPanel drawingPanel = new DrawingPanel();
+	
+	public ToolBar(){
+		this.setBackground(Color.PINK);
 		
-		this.ovalIcon = new ImageIcon("Icon/icons8-oval-24.png");
-		this.ovalTool = new JRadioButton(ovalIcon);
-		this.add(this.ovalTool);
-		buttonGroup.add(this.ovalTool);
-		
-		this.polygonIcon = new ImageIcon("Icon/icons8-polygon-24.png");
-		this.polygonTool = new JRadioButton(polygonIcon);
-		this.add(this.polygonTool);	
-		buttonGroup.add(this.polygonTool);
-
-        this.lineIcon = new ImageIcon("Icon/icons8-line-24.png");
-		this.lineTool = new JRadioButton(lineIcon);
-		this.add(this.lineTool);
-		buttonGroup.add(this.lineTool);	
-
-        this.rectangleTool.addActionListener(actionHandler);
-		this.ovalTool.addActionListener(actionHandler);
-        this.polygonTool.addActionListener(actionHandler);
-		this.lineTool.addActionListener(actionHandler);
-    }
-
-    DrawingPanel drawingPanel = new DrawingPanel();
-
-    public void assosiate(DrawingPanel drawingPanel) {
-        this.drawingPanel = drawingPanel;
-        this.rectangleTool.doClick();
-    }
-
-    private class ActionHandler implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent event) {
-			if(event.getSource() == rectangleTool ) {
-                drawingPanel.setSelectedTool(new TRectangle());
-			} else if(event.getSource() == ovalTool) {
-				drawingPanel.setSelectedTool(new TOval());	
-            } else if(event.getSource() == polygonTool) {
-                drawingPanel.setSelectedTool(new TPolygon());	
-			} else if(event.getSource() == lineTool) {
-				drawingPanel.setSelectedTool(new TLine());	
-			} 
+		ButtonGroup buttonGroup = new ButtonGroup();
+		ActionHandler actionHandler = new ActionHandler();
+			
+		for(ETools tool: ETools.values()) {
+			this.tooIcon = new ImageIcon("Icon/"+tool.name()+".png");
+			this.toolButton = new JRadioButton(this.tooIcon);
+			
+			String toolName = "" + tool.name();
+			this.toolButton.setActionCommand(toolName);
+			
+			this.add(this.toolButton);
+			buttonGroup.add(this.toolButton);
+			this.toolButton.addActionListener(actionHandler);
 		}
-		
+				 
 	}
 
+
+	public void assosiate(DrawingPanel drawingPanel) {
+		this.drawingPanel = drawingPanel;	
+		this.toolButton.doClick();
+	}
+	
+	private class ActionHandler implements ActionListener{
+		@Override
+		public void actionPerformed(ActionEvent event) {
+			drawingPanel.setSelectedTool(ETools.valueOf(event.getActionCommand()));
+		}	
+	}
 }

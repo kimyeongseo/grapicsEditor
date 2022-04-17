@@ -10,14 +10,17 @@ public class TRectangle extends TShape{
 	public TRectangle() {
 	}
 
-	public void getCoord(int x, int y){
+	public TShape clone() {
+		return new TRectangle();
+	}
+
+	public void setOrigin(int x, int y) {
 		this.x = x;
 		this.y = y;
 		this.w = 0;
 		this.h = 0;
 	}
 	public void resize(int currentX, int currentY) {
-		
 		this.w = currentX - x > 0 ? currentX - x : x- currentX;
 		this.h = currentY - y > 0 ? currentY - y : y- currentY;
 		this.draggedDirectionX = currentX - x > 0 ? true : false;
@@ -28,5 +31,4 @@ public class TRectangle extends TShape{
 		((Graphics2D)graphics2d).setStroke(new BasicStroke(thickness()));
 		graphics2d.drawRect(draggedDirectionX==true ? x: x-w,draggedDirectionY==true ? y: y-h, w,h);
 	}
-	
 }

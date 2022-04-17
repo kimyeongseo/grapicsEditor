@@ -14,9 +14,8 @@ import java.awt.event.MouseWheelListener;
 import java.util.Vector;
 
 import graphics.global.Constants;
-
+import graphics.global.Constants.ETools;
 import graphics.shapes.TShape;
-import javafx.scene.effect.Light.Point;
 
 public class DrawingPanel extends JPanel {
 
@@ -24,13 +23,14 @@ public class DrawingPanel extends JPanel {
     private Vector<TShape> shapes;
 
     // associated attribute
-    private Constants.ETools eTool;
+    public Constants.ETools eTool;
 
     // working variable
-    private TShape selectedTool;
+    private ETools selectedTool;
+    private TShape currentShape;
 
 
-    private enum EDrawingState{
+    public enum EDrawingState{
         eIdle,
         e2PointDrawing,
         eNPointDrawing
@@ -48,50 +48,53 @@ public class DrawingPanel extends JPanel {
 		this.addMouseListener(handler);
 		this.addMouseMotionListener(handler);
 		this.addMouseWheelListener(handler);
+		
     }
 
-    public void setSelectedTool(TShape selectedTool){
+    public void setSelectedTool(ETools selectedTool){
         this.selectedTool = selectedTool;
     }
 
-    public void paint(Graphics graphics){
-        super.paint(graphics);
-        for(TShape shape: this.shapes){
-            shape.draw((Graphics2D)graphics);
-        }
-    }
+	public void paint(Graphics graphics) {
+		super.paint(graphics);
+		for (TShape shape : this.shapes) {
+			shape.draw((Graphics2D) graphics);
+		}
+	}
 
 
     private void prepareDrawing(int x, int y) {
+    	this.currentShape = this.selectedTool.newShape();
+    	
 		Graphics2D graphics2d = (Graphics2D) this.getGraphics();
 		graphics2d.setXORMode(this.getBackground());
-		this.selectedTool.getCoord(x,y);
-		this.selectedTool.draw(graphics2d);
+		this.currentShape.setOrigin(x,y);
+		this.currentShape.draw(graphics2d);
 	}
 
 	private void keepDrawing(int x, int y) {
 		// erase
 		Graphics2D graphics2d = (Graphics2D) this.getGraphics();
 		graphics2d.setXORMode(this.getBackground());
-		this.selectedTool.draw(graphics2d);
+		this.currentShape.draw(graphics2d);
 
 		// draw
-		this.selectedTool.resize(x, y);
-		this.selectedTool.draw(graphics2d);
+		this.currentShape.resize(x, y);
+		this.currentShape.draw(graphics2d);
 	}
 
     private void continueDrawing(int x, int y) {
-		Graphics2D graphics2d = (Graphics2D) this.getGraphics();
-		this.selectedTool.addPoint(x, y);
-		this.selectedTool.draw(graphics2d);
+		this.currentShape.addPoint(x, y);
 	}
 
 	
 	private void finishDrawing(int x, int y) {
-		this.shapes.add(this.selectedTool);
+		Graphics2D graphics2d = (Graphics2D) this.getGraphics();
+		graphics2d.setPaintMode();
+		this.currentShape.draw(graphics2d);
+		
+		this.shapes.add(this.currentShape);
 	}
-	
-
 
     private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener{
 
@@ -107,7 +110,7 @@ public class DrawingPanel extends JPanel {
 
         private void lButtonClicked(MouseEvent e) {
 			if(eDrawingState == EDrawingState.eIdle) {
-				if(eTool == Constants.ETools.ePolygon) {
+				if(selectedTool == ETools.ePolygon) {
 					eDrawingState = EDrawingState.eNPointDrawing;
 					prepareDrawing(e.getX(), e.getY());	
 				}
@@ -125,13 +128,14 @@ public class DrawingPanel extends JPanel {
 		}
 		
 		public void mouseMoved(MouseEvent e){
-            if(eDrawingState == EDrawingState.eNPointDrawing)
+            if(eDrawingState == EDrawingState.eNPointDrawing) {
 				keepDrawing(e.getX(), e.getY());
+            }
 		}
 		
 		public void mousePressed(MouseEvent e) {
             if (eDrawingState == EDrawingState.eIdle) {
-				if (eTool != Constants.ETools.ePolygon) {
+				if (selectedTool != ETools.ePolygon) {
 					eDrawingState = EDrawingState.e2PointDrawing;
 					prepareDrawing(e.getX(), e.getY());
 				}
