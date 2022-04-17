@@ -21,16 +21,12 @@ public class DrawingPanel extends JPanel {
 
     // components
     private Vector<TShape> shapes;
-
-    // associated attribute
-    public Constants.ETools eTool;
-
     // working variable
     private ETools selectedTool;
     private TShape currentShape;
 
 
-    public enum EDrawingState{
+    private enum EDrawingState{
         eIdle,
         e2PointDrawing,
         eNPointDrawing
@@ -48,17 +44,16 @@ public class DrawingPanel extends JPanel {
 		this.addMouseListener(handler);
 		this.addMouseMotionListener(handler);
 		this.addMouseWheelListener(handler);
-		
     }
 
     public void setSelectedTool(ETools selectedTool){
         this.selectedTool = selectedTool;
     }
 
-	public void paint(Graphics graphics) {
+	public void paint(Graphics graphics){
 		super.paint(graphics);
-		for (TShape shape : this.shapes) {
-			shape.draw((Graphics2D) graphics);
+		for(TShape shape: this.shapes){
+			shape.draw((Graphics2D)graphics);
 		}
 	}
 
