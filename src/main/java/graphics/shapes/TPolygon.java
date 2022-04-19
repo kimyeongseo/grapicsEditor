@@ -2,17 +2,12 @@ package graphics.shapes;
 
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
-
+import java.awt.Polygon;
 
 public class TPolygon extends TShape{
-		
-	private final int MAX_POINTS = 50;
-	private int[] xPoints, yPoints;
-	private int nPoints;
-
+	
 	public TPolygon() {
-		this.xPoints = new int[MAX_POINTS];
-		this.yPoints = new int[MAX_POINTS];
+		this.shape = new Polygon();
 	}
 	
 	public TShape clone() {
@@ -20,30 +15,34 @@ public class TPolygon extends TShape{
 	}
 	
 	public void setOrigin(int x, int y) {
-		this.nPoints = 0;	
-		this.xPoints[this.nPoints] = x;
-		this.yPoints[this.nPoints] = y;
-		this.nPoints++;
-
-		this.addPoint(x, y);
-		this.addPoint(x, y);
+		Polygon polygon = (Polygon) this.shape;
+		polygon.addPoint(x, y);
+		polygon.addPoint(x, y);
 	}
 	
+
 	public void addPoint(int x, int y) {
-		this.xPoints[this.nPoints] = x;
-		this.yPoints[this.nPoints] = y;
-		this.nPoints++;
+		Polygon polygon = (Polygon) this.shape;
+		polygon.addPoint(x, y);
 	}
 
 	@Override
 	public void resize(int x, int y) {	
-		this.xPoints[this.nPoints-1] = x;
-		this.yPoints[this.nPoints-1] = y;
+		Polygon polygon = (Polygon) this.shape;
+		polygon.xpoints[polygon.npoints -1] = x;
+		polygon.ypoints[polygon.npoints -1] = y;
 	}
 
 	@Override
 	public void draw(Graphics2D graphics2d) {
 		((Graphics2D) graphics2d).setStroke(new BasicStroke(thickness()));
-		graphics2d.drawPolyline(xPoints, yPoints, nPoints);
-	}		
+		graphics2d.draw(this.shape);
+	}
+
+	@Override
+	public boolean contains(int x, int y) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+		
 }
