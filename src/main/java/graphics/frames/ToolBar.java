@@ -14,9 +14,6 @@ import graphics.global.Constants.ETools;
 
 public class ToolBar extends JToolBar {
 	private static final long serialVersionUID = 1L;
-
-	 private JRadioButton toolButton;
-	 private Icon tooIcon;
 	 
 	 DrawingPanel drawingPanel = new DrawingPanel();
 	
@@ -26,24 +23,26 @@ public class ToolBar extends JToolBar {
 		ButtonGroup buttonGroup = new ButtonGroup();
 		ActionHandler actionHandler = new ActionHandler();
 			
-		for(ETools tool: ETools.values()) {
-			this.tooIcon = new ImageIcon("Icon/"+tool.name()+".png");
-			this.toolButton = new JRadioButton(this.tooIcon);
+		for(ETools eTool: ETools.values()) {
+			ImageIcon toolIcon = new ImageIcon(eTool.getIcon());
+			JRadioButton toolButton = new JRadioButton(toolIcon);
+			toolButton.setSelectedIcon(new ImageIcon(eTool.getSelectedIcon()));
+			toolButton.setToolTipText(eTool.getToolTip());
 			
-			String toolName = "" + tool.name();
-			this.toolButton.setActionCommand(toolName);
 			
-			this.add(this.toolButton);
-			buttonGroup.add(this.toolButton);
-			this.toolButton.addActionListener(actionHandler);
-		}
-				 
+			toolButton.setActionCommand(eTool.name());
+			toolButton.addActionListener(actionHandler);
+			
+			this.add(toolButton);
+			buttonGroup.add(toolButton);
+		}	 
 	}
 
 
 	public void assosiate(DrawingPanel drawingPanel) {
-		this.drawingPanel = drawingPanel;	
-		this.toolButton.doClick();
+		this.drawingPanel = drawingPanel;
+		JRadioButton defaultButton = (JRadioButton) this.getComponent(ETools.eRectangle.ordinal()); 
+		defaultButton.doClick();
 	}
 	
 	private class ActionHandler implements ActionListener{

@@ -1,35 +1,38 @@
 package graphics.menus;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 
+import graphics.frames.DrawingPanel;
+import graphics.global.Constants.EEditMenus;
+
 public class EditMenu extends JMenu {
 
-    private JMenuItem undoItem;
-    private JMenuItem redoItem;
-    private JMenuItem cutItem;
-    private JMenuItem copyItem;
-    private JMenuItem pasteItem;
-    private JMenuItem groupItem;
-    private JMenuItem unGroupItem;
+    private DrawingPanel drawingPanel;
 
-    public EditMenu(String title){
-        super(title);
+    public EditMenu(String title) {
+		super(title);
 
-        this.undoItem = new JMenuItem("Undo");
-        this.add(this.undoItem);
-        this.redoItem = new JMenuItem("Redo");
-        this.add(this.redoItem);
-        this.cutItem = new JMenuItem("Cut");
-        this.add(this.cutItem);
-        this.copyItem = new JMenuItem("Copy");
-        this.add(this.copyItem);
-        this.pasteItem = new JMenuItem("Paste");
-        this.add(this.pasteItem);
-        this.groupItem = new JMenuItem("Group");
-        this.add(this.groupItem);
-        this.unGroupItem = new JMenuItem("UnGroup");
-        this.add(this.unGroupItem);
-    }
-    
+		ActionHandler actionHandler = new ActionHandler();
+
+		for (EEditMenus eMenu : EEditMenus.values()) {
+			JMenuItem menuItem = new JMenuItem(eMenu.getLable());
+			menuItem.addActionListener(actionHandler);
+			this.add(menuItem);
+			
+			 menuItem.setActionCommand(eMenu.toString());
+	         menuItem.addActionListener(actionHandler);
+		}
+	}
+
+	public void initialize(DrawingPanel drawingPanel) {
+		this.drawingPanel = drawingPanel;
+	}
+
+	private class ActionHandler implements ActionListener {
+		public void actionPerformed(ActionEvent event) {	
+		}
+	}    
 }
