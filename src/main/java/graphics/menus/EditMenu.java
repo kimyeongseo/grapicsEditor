@@ -18,7 +18,7 @@ public class EditMenu extends JMenu {
 		ActionHandler actionHandler = new ActionHandler();
 
 		for (EEditMenus eMenu : EEditMenus.values()) {
-			JMenuItem menuItem = new JMenuItem(eMenu.getLable());
+			JMenuItem menuItem = new JMenuItem(eMenu.getLabel());
 			menuItem.addActionListener(actionHandler);
 			this.add(menuItem);
 			

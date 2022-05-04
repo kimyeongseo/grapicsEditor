@@ -52,14 +52,14 @@ public class Constants {
 
 		eOpen("open"), eSaveAs("save as");
 		
-		private String lable;
+		private String label;
 
-		private EFileMenus(String lable) {
-			this.lable = lable;
+		private EFileMenus(String label) {
+			this.label = label;
 		}
 
-		public String getLable() {
-			return this.lable;
+		public String getLabel() {
+			return this.label;
 		}
 	}
 
@@ -67,14 +67,14 @@ public class Constants {
 		eUnDo("undo"), eReDo("redo"), eCut("cut"), eCopy("copy"), ePaste("paste"), eDelete("delete"),
 		eSelectAll("selectAll"), eGroup("group"), eUnGroup("unGroup");
 
-		private String lable;
+		private String label;
 
-		private EEditMenus(String lable) {
-			this.lable = lable;
+		private EEditMenus(String label) {
+			this.label = label;
 		}
 
-		public String getLable() {
-			return this.lable;
+		public String getLabel() {
+			return this.label;
 		}
 	}
 }

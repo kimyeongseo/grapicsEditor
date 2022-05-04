@@ -17,7 +17,7 @@ public class FileMenu extends JMenu{
 		ActionHandler actionHandler = new ActionHandler();
 		
 		for(EFileMenus eMenu: EFileMenus.values()) {
-			JMenuItem menuItem = new JMenuItem(eMenu.getLable());
+			JMenuItem menuItem = new JMenuItem(eMenu.getLabel());
 			menuItem.setActionCommand(eMenu.name());
 			menuItem.addActionListener(actionHandler);
 			this.add(menuItem);
