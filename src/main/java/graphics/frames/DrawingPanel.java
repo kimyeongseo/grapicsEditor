@@ -15,70 +15,80 @@ import java.util.Vector;
 
 import graphics.global.Constants.ETools;
 import graphics.shapes.TShape;
+import java.awt.Cursor;
 
 public class DrawingPanel extends JPanel {
 
 	// components
 	private boolean bUpdated;
-    private Vector<TShape> shapes;
+	private Vector<TShape> shapes;
 	public int thick;
 
-    // working variable
-    private ETools selectedTool;
-    private TShape currentShape;
+	// working variable
+	private ETools selectedTool;
+	private TShape currentShape;
+	private TShape selectedShape;
 
+	private enum EDrawingState {
+		eIdle,
+		e2PointDrawing,
+		eNPointDrawing
+	}
 
-    private enum EDrawingState{
-        eIdle,
-        e2PointDrawing,
-        eNPointDrawing
-    }
+	EDrawingState eDrawingState;
 
-    EDrawingState eDrawingState;
-
-    public DrawingPanel(){
-        this.setBackground(Color.white);
-        eDrawingState = EDrawingState.eIdle;
+	public DrawingPanel() {
+		this.setBackground(Color.white);
+		eDrawingState = EDrawingState.eIdle;
 
 		this.bUpdated = false;
-        this.shapes = new Vector<TShape>();
+		this.shapes = new Vector<TShape>();
 
-        MouseHandler handler = new MouseHandler();
+		MouseHandler handler = new MouseHandler();
 		this.addMouseListener(handler);
 		this.addMouseMotionListener(handler);
 		this.addMouseWheelListener(handler);
-    }
+	}
 
-	public boolean isUpdated(){return this.bUpdated;}
-	public boolean getUpdated(){return this.bUpdated;}
-	public void setUpdated(boolean bUpdated){this.bUpdated = bUpdated;}
+	public boolean isUpdated() {
+		return this.bUpdated;
+	}
 
-    public void setSelectedTool(ETools selectedTool){
-        this.selectedTool = selectedTool;
-    }
+	public boolean getUpdated() {
+		return this.bUpdated;
+	}
 
-	public void paint(Graphics graphics){
+	public void setUpdated(boolean bUpdated) {
+		this.bUpdated = bUpdated;
+	}
+
+	public void setSelectedTool(ETools selectedTool) {
+		this.selectedTool = selectedTool;
+	}
+
+	public void paint(Graphics graphics) {
 		super.paint(graphics);
-		for(TShape shape: this.shapes){
-			shape.draw((Graphics2D)graphics);
+		for (TShape shape : this.shapes) {
+			shape.draw((Graphics2D) graphics);
+			shape.drawAnchor((Graphics2D)graphics);
 		}
 	}
 
-	public Vector<TShape> getShapes(){
+	public Vector<TShape> getShapes() {
 		return shapes;
 	}
-	public void setShapes(Vector<TShape> shapes){
+
+	public void setShapes(Vector<TShape> shapes) {
 		this.shapes = (Vector<TShape>) shapes;
 		this.repaint();
 	}
 
+	private void prepareDrawing(int x, int y) {
+		this.currentShape = this.selectedTool.newShape();
 
-    private void prepareDrawing(int x, int y) {
-    	this.currentShape = this.selectedTool.newShape();
-    	
 		Graphics2D graphics2d = (Graphics2D) this.getGraphics();
 		graphics2d.setXORMode(this.getBackground());
-		this.currentShape.setOrigin(x,y);
+		this.currentShape.setOrigin(x, y);
 
 		this.currentShape.thickness = this.thick;
 		this.currentShape.draw(graphics2d);
@@ -95,38 +105,62 @@ public class DrawingPanel extends JPanel {
 		this.currentShape.draw(graphics2d);
 	}
 
-    private void continueDrawing(int x, int y) {
+	private void continueDrawing(int x, int y) {
 		this.currentShape.addPoint(x, y);
 	}
 
-	
 	private void finishDrawing(int x, int y) {
 		Graphics2D graphics2d = (Graphics2D) this.getGraphics();
 		graphics2d.setPaintMode();
 		this.currentShape.draw(graphics2d);
-		
+
 		this.shapes.add(this.currentShape);
 		this.setUpdated(true);
 	}
 
-	public void newDrawingPanel(){
+	private boolean onShape(int x, int y) {
+		for (TShape shape : this.shapes) {
+			if (shape.contains(x, y)) {
+				this.selectedShape = shape;
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private void changeCursor(int x, int y) {
+		Cursor cursor = new Cursor(Cursor.DEFAULT_CURSOR);
+		if (onShape(x, y)) {
+			cursor = new Cursor(Cursor.CROSSHAIR_CURSOR);
+		}
+		this.setCursor(cursor);
+	}
+
+	private void selectShape() {
+		this.repaint();
+		this.selectedShape.setSelected(true);
+		Graphics2D g2d = (Graphics2D) this.getGraphics();
+		this.selectedShape.drawAnchor(g2d);
+	}
+
+	public void newDrawingPanel() {
 		this.shapes.clear();
 		repaint();
 	}
 
-    private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener{
+	private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener {
 
-        public void mouseClicked(MouseEvent e){
-            if(e.getButton() == MouseEvent.BUTTON1) {
-				if(e.getClickCount() == 1) {
+		public void mouseClicked(MouseEvent e) {
+			if (e.getButton() == MouseEvent.BUTTON1) {
+				if (e.getClickCount() == 1) {
 					this.lButtonClicked(e);
-				} else if(e.getClickCount() == 2) {
+				} else if (e.getClickCount() == 2) {
 					this.lButtonDoubleClicked(e);
 				}
 			}
 		}
 
-        private void lButtonClicked(MouseEvent e) {
+		private void lButtonClicked(MouseEvent e) {
 			if(eDrawingState == EDrawingState.eIdle) {
 				if(selectedTool == ETools.ePolygon) {
 					eDrawingState = EDrawingState.eNPointDrawing;
@@ -135,24 +169,33 @@ public class DrawingPanel extends JPanel {
 			} else if(eDrawingState == EDrawingState.eNPointDrawing) {
 				continueDrawing(e.getX(), e.getY());
 			}
+
+			if (selectedTool == ETools.eSelect) {
+				if (onShape(e.getX(), e.getY())) {
+					selectShape();
+					System.out.println(selectedShape);
+				}
+			}
 		}
-		
 
 		private void lButtonDoubleClicked(MouseEvent e) {
-			if(eDrawingState == EDrawingState.eNPointDrawing) {
+			if (eDrawingState == EDrawingState.eNPointDrawing) {
 				finishDrawing(e.getX(), e.getY());
 				eDrawingState = EDrawingState.eIdle;
 			}
 		}
-		
-		public void mouseMoved(MouseEvent e){
-            if(eDrawingState == EDrawingState.eNPointDrawing) {
+
+		public void mouseMoved(MouseEvent e) {
+			if (eDrawingState == EDrawingState.eNPointDrawing) {
 				keepDrawing(e.getX(), e.getY());
-            }
+			}
+			if (eDrawingState == EDrawingState.eIdle && selectedTool == ETools.eSelect) {
+				changeCursor(e.getX(), e.getY());
+			}
 		}
-		
+
 		public void mousePressed(MouseEvent e) {
-            if (eDrawingState == EDrawingState.eIdle) {
+			if (eDrawingState == EDrawingState.eIdle) {
 				if (selectedTool != ETools.ePolygon) {
 					eDrawingState = EDrawingState.e2PointDrawing;
 					prepareDrawing(e.getX(), e.getY());
@@ -161,7 +204,7 @@ public class DrawingPanel extends JPanel {
 		}
 
 		public void mouseReleased(MouseEvent e) {
-            if (eDrawingState == EDrawingState.e2PointDrawing) {
+			if (eDrawingState == EDrawingState.e2PointDrawing) {
 				finishDrawing(e.getX(), e.getY());
 				eDrawingState = EDrawingState.eIdle;
 			}
@@ -174,12 +217,12 @@ public class DrawingPanel extends JPanel {
 		}
 
 		public void mouseDragged(MouseEvent e) {
-            if (eDrawingState == EDrawingState.e2PointDrawing)
-            keepDrawing(e.getX(), e.getY());
+			if (eDrawingState == EDrawingState.e2PointDrawing)
+				keepDrawing(e.getX(), e.getY());
 		}
-	
+
 		public void mouseWheelMoved(MouseWheelEvent e) {
 		}
-    }
-    
+	}
+
 }
