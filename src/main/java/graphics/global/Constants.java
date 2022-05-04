@@ -4,6 +4,7 @@ import graphics.shapes.TLine;
 import graphics.shapes.TOval;
 import graphics.shapes.TPolygon;
 import graphics.shapes.TRectangle;
+import graphics.shapes.TSelect;
 import graphics.shapes.TShape;
 
 public class Constants { 
@@ -12,11 +13,11 @@ public class Constants {
 	}
 
 	public enum ETools {
-		// eSelect(IconAddress("select"), IconAddress("clicked_select"), "그려진 도형을 선택하여 이동시킵니다.",new TSelect()),
 		eRectangle(IconAddress("rectangle"), IconAddress("clicked_rectangle"), "네모를 그립니다.", new TRectangle()),
 		eOval(IconAddress("oval"), IconAddress("clicked_oval"), "원을 그립니다.", new TOval()),
 		eLine(IconAddress("line"), IconAddress("clicked_line"), "선을 그립니다.", new TLine()),
-		ePolygon(IconAddress("polygon"), IconAddress("clicked_polygon"), "다각형을 그립니다.", new TPolygon());
+		ePolygon(IconAddress("polygon"), IconAddress("clicked_polygon"), "다각형을 그립니다.", new TPolygon()),
+		eSelect(IconAddress("select"), IconAddress("clicked_select"), "그려진 도형을 선택하여 이동시킵니다.",new TSelect());
 //		ePen(IconAddress("pen"), IconAddress("clicked_pen"), new TPen());
 
 		private TShape tool;

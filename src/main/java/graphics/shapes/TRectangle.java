@@ -1,7 +1,5 @@
 package graphics.shapes;
 
-import java.awt.BasicStroke;
-import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
 public class TRectangle extends TShape{
@@ -28,16 +26,4 @@ public class TRectangle extends TShape{
 		rectangle.setFrameFromDiagonal(startX, startY, x, y);
 
 	}
-	
-	public void draw(Graphics2D graphics2d) {
-		((Graphics2D)graphics2d).setStroke(new BasicStroke(thickness()));
-		graphics2d.draw(this.shape);
-	}
-
-
-	@Override
-	public boolean contains(int x, int y) {
-		return this.shape.contains(x,y);
-	}
-
 }
