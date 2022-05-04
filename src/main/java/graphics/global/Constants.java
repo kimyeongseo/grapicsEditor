@@ -49,10 +49,9 @@ public class Constants {
 	}
 
 	public enum EFileMenus {
-//		eNew("new"), eOpen("open"), eClose("close"), eSave("save"), eSaveAs("save as"), ePrint("print"), eQuit("quit");
+		// ePrint("print")
+		eNew("new"), eOpen("open"), eClose("close"), eSave("save"), eSaveAs("save as"), eQuit("quit");
 
-		eOpen("open"), eSaveAs("save as");
-		
 		private String label;
 
 		private EFileMenus(String label) {

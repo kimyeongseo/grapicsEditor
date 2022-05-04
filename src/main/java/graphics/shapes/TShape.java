@@ -3,9 +3,11 @@ package graphics.shapes;
 import java.awt.BasicStroke;
 import java.awt.Graphics2D;
 import java.awt.Shape;
+import java.io.Serializable;
 
-abstract public class TShape{
+abstract public class TShape implements Serializable{
 	// attributes
+	private static final long serialVersionUID = 1L;
 
 	// components
 	protected Shape shape;

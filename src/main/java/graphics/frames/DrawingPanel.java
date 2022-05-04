@@ -19,8 +19,10 @@ import graphics.shapes.TShape;
 
 public class DrawingPanel extends JPanel {
 
-    // components
+	// components
+	private boolean bUpdated;
     private Vector<TShape> shapes;
+
     // working variable
     private ETools selectedTool;
     private TShape currentShape;
@@ -38,6 +40,7 @@ public class DrawingPanel extends JPanel {
         this.setBackground(Color.white);
         eDrawingState = EDrawingState.eIdle;
 
+		this.bUpdated = false;
         this.shapes = new Vector<TShape>();
 
         MouseHandler handler = new MouseHandler();
@@ -45,6 +48,10 @@ public class DrawingPanel extends JPanel {
 		this.addMouseMotionListener(handler);
 		this.addMouseWheelListener(handler);
     }
+
+	public boolean isUpdated(){return this.bUpdated;}
+	public boolean getUpdated(){return this.bUpdated;}
+	public void setUpdated(boolean bUpdated){this.bUpdated = bUpdated;}
 
     public void setSelectedTool(ETools selectedTool){
         this.selectedTool = selectedTool;
@@ -55,6 +62,14 @@ public class DrawingPanel extends JPanel {
 		for(TShape shape: this.shapes){
 			shape.draw((Graphics2D)graphics);
 		}
+	}
+
+	public Vector<TShape> getShapes(){
+		return shapes;
+	}
+	public void setShapes(Vector<TShape> shapes){
+		this.shapes = (Vector<TShape>) shapes;
+		this.repaint();
 	}
 
 
@@ -91,6 +106,12 @@ public class DrawingPanel extends JPanel {
 		this.currentShape.draw(graphics2d);
 		
 		this.shapes.add(this.currentShape);
+		this.setUpdated(true);
+	}
+
+	public void newDrawingPanel(){
+		this.shapes.clear();
+		repaint();
 	}
 
     private class MouseHandler implements MouseListener, MouseMotionListener, MouseWheelListener{
