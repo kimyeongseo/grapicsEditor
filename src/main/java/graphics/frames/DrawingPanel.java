@@ -64,6 +64,8 @@ public class DrawingPanel extends JPanel {
 		Graphics2D graphics2d = (Graphics2D) this.getGraphics();
 		graphics2d.setXORMode(this.getBackground());
 		this.currentShape.setOrigin(x,y);
+
+		this.currentShape.thickness = 3;
 		this.currentShape.draw(graphics2d);
 	}
 
