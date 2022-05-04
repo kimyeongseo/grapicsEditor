@@ -13,7 +13,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.event.MouseWheelListener;
 import java.util.Vector;
 
-import graphics.global.Constants;
 import graphics.global.Constants.ETools;
 import graphics.shapes.TShape;
 
@@ -22,6 +21,7 @@ public class DrawingPanel extends JPanel {
 	// components
 	private boolean bUpdated;
     private Vector<TShape> shapes;
+	public int thick;
 
     // working variable
     private ETools selectedTool;
@@ -80,7 +80,7 @@ public class DrawingPanel extends JPanel {
 		graphics2d.setXORMode(this.getBackground());
 		this.currentShape.setOrigin(x,y);
 
-		this.currentShape.thickness = 3;
+		this.currentShape.thickness = this.thick;
 		this.currentShape.draw(graphics2d);
 	}
 
